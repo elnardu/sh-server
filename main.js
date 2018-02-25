@@ -14,6 +14,7 @@ var authRouter = require('./routes/auth'),
     groupRouter = require('./routes/group'),
     userRouter = require('./routes/user');
 
+const graphParser = require('./compile/main');
 
 mongoose.Promise = global.Promise; //tell mongoose to use default promises
 mongoose.connect(process.env.MONGODB);
@@ -44,6 +45,10 @@ app.use('/auth', authRouter);
 app.use('/api/data', dataRouter);
 app.use('/api/group', groupRouter);
 app.use('/api/user', userRouter);
+
+app.post('/api/compile', (req, res) => {
+    res.json({result: graphParser.main(req.body.obj)});
+});
 
 http.listen(process.env.PORT, function () {
     console.log("Listening on port " + process.env.PORT);
